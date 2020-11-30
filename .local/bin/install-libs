@@ -1,0 +1,115 @@
+#!/usr/bin/env bash
+
+# set -o nounset    # error when referencing undefined variable
+# set -o errexit    # exit when command fails
+
+usage() {
+cat << EOF
+Usage: install-libs [ -r | --rlang ]
+                    [ -p | --python ] 
+                    [ -a | --all ]
+EOF
+exit 1
+}
+
+# neovim plugin
+installnvimplugins() {
+    nvim +PlugInstall +qall +qall
+}
+
+# coc lsp
+installcoc() {
+    # Install latest nodejs
+    # if [ ! -x "$(command -v node)" ]; then
+    #     curl --fail -LSs https://install-node.now.sh/latest | sh
+    #     export PATH="/usr/local/bin/:$PATH"
+    sudo apt update -y && \
+      sudo apt install -y npm nodejs
+    # fi
+
+    # Use package feature to install coc.nvim
+    # for neovim
+     mkdir -p ~/.local/share/nvim/site/pack/coc/start
+     cd ~/.local/share/nvim/site/pack/coc/start
+     curl --fail -L https://github.com/neoclide/coc.nvim/archive/release.tar.gz | tar xzfv -
+
+    # Install extensions
+    mkdir -p ~/.config/coc/extensions
+    cd ~/.config/coc/extensions
+    if [ ! -f package.json ]
+    then
+      echo '{"dependencies":{}}'> package.json
+    fi
+    # Change extension names to the extensions you need
+    npm install coc-snippets coc-marketplace coc-pyls coc-python coc-r-lsp \
+      --global-style --ignore-scripts --no-bin-links --no-package-lock --only=prod
+}
+
+# for R
+installr() {
+    # search for R package in apt with: sudo apt search r-cran
+    sudo apt update -y && \
+      # # installing R 4.0
+      # sudo apt install -y dirmngr gnupg apt-transport-https ca-certificates software-properties-common && \
+      # sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys E298A3A825C0D65DFD57CBB651716619E084DAB9 && \
+      # sudo add-apt-repository 'deb https://cloud.r-project.org/bin/linux/ubuntu focal-cran40/' && \
+      sudo apt install -y libxml2-dev libgit2-dev && \
+      sudo apt install -y r-base && \
+      sudo apt install -y r-cran-tidyverse
+}
+
+# for python
+installpy() {
+    sudo apt update -y && \
+      sudo apt install git && \
+      pip3 install radian visidata pandas scikit-learn numpy ipython psutil \
+      python-language-server pylint
+}
+
+while :
+do
+  case "$1" in
+    -r | --rlang ) installnvimplugins && installcoc && installr ; exit 1 ;;
+    -p | --pyhton ) installnvimplugins && installcoc && installpy ; exit 1  ;;
+    -a | --all ) installnvimplugins && installcoc && installr && installpy ; exit ;;
+    *) echo "Choose an option."; usage ;;
+  esac
+done
+
+
+# sudo add-apt-repository ppa:lazygit-team/release && \
+#   sudo apt-get update && \
+#   sudo apt-get install -y lazygit --no-install-recommends && \
+#   sudo apt-get clean && \
+#   rm -rf /var/lib/apt/lists/*
+
+# This cover most of R dependencies
+# sudo apt-get update && \
+#   sudo apt-get install -y \
+#   build-essential \
+#   bwidget \
+#   libcairo2-dev \
+#   libcurl4-gnutls-dev \
+#   libexif-dev \
+#   libfontconfig1-dev \
+#   libfreetype6-dev \
+#   libgdal-dev \
+#   libgeos++-dev \
+#   libgeos-dev \
+#   libglib2.0-dev \
+#   libgmp3-dev \
+#   libgsl0-dev \
+#   libmagick++-dev \
+#   libproj-dev \
+#   libspatialite-dev \
+#   libssh2-1-dev \
+#   libssl-dev \
+#   libtiff5-dev \
+#   libudunits2-dev \
+#   libxml2-dev \
+#   libxt-dev \
+#   make \
+#   netcdf-bin \
+#   pandoc \
+#   pandoc-citeproc \
+#   zlib1g-dev

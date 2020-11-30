@@ -1,0 +1,42 @@
+#!/usr/bin/env bash
+
+if [ "${USER:-}" == "root" ]; then
+  echo "This script works only with normal user, it wont work with root." >&2
+  echo "Please log in as normal user and try again." >&2
+  exit 1
+fi
+
+if ! [ -x "$(command -v python)" ]; then
+  echo 'Error: python is not installed.' >&2
+  exit 1
+fi
+
+venv_name="${1:-venv}"
+
+python3 -m venv "${venv_name}"
+
+[ ! -d ".vim" ] && mkdir .vim
+
+python_env_path="$PWD/${venv_name}/bin/python3"
+
+cat << EOF > .vim/coc-settings.json
+{
+  "python.pythonPath": "$python_env_path"
+}
+EOF
+
+cat << EOF > requirements.txt
+# PyQt5
+# ipython
+jedi
+matplotlib
+numpy
+pandas
+# pandas_profiling
+# pylint
+seaborn
+sklearn
+EOF
+
+$python_env_path -m pip install --upgrade pip
+$python_env_path -m pip install -r requirements.txt

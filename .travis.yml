@@ -1,0 +1,15 @@
+os: linux
+dist: xenial
+
+language: shell
+
+services:
+  - docker
+
+script:
+  - make build
+  
+after_success:
+  - docker login -u kguidonimartins -p "$DOCKER_PASSWORD"
+  - export REPO=kguidonimartins/ubuntu-tmux-vim
+  - if [ $TRAVIS_BRANCH == "main" ]; then docker push $REPO; fi
