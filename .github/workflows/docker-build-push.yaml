@@ -30,7 +30,6 @@ jobs:
         with:
           context: .
           file: ./Dockerfile
-          platforms: linux/amd64,linux/arm64,linux/386
           push: true
           tags: kguidonimartins/ubuntu-tmux-vim:latest
           secrets: |
