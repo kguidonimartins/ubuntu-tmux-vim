@@ -1,6 +1,6 @@
 # https://github.com/jeremyckahn/vim-docker-env/blob/master/Dockerfile
 
-FROM ubuntu:focal
+FROM ubuntu:latest
 
 # environment variables
 ENV DEBIAN_FRONTEND noninteractive
