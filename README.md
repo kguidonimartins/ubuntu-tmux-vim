@@ -1,5 +1,6 @@
 # ubuntu-tmux-vim
 
+![docker-build-push](https://github.com/kguidonimartins/ubuntu-tmux-vim/workflows/docker-build-push/badge.svg?branch=main)
 
 # Clone
 
