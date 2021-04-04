@@ -62,7 +62,9 @@ docker run -it --rm --user root -v $(pwd):/work -w /work kguidonimartins/ubuntu-
 
 -->
 
+## NOTES
 
+https://medium.com/@ls12styler/docker-as-an-integrated-development-environment-95bc9b01d2c1
 
 
 
